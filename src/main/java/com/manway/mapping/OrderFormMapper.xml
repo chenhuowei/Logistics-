@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manway.dao.OrderFormMapper" >
+  <resultMap id="BaseResultMap" type="com.manway.entity.OrderForm" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="order_property" property="orderProperty" jdbcType="VARCHAR" />
+    <result column="goods_weight" property="goodsWeight" jdbcType="DOUBLE" />
+    <result column="goods_volume" property="goodsVolume" jdbcType="DOUBLE" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="order_money" property="orderMoney" jdbcType="DOUBLE" />
+    <result column="pack_type" property="packType" jdbcType="VARCHAR" />
+    <result column="payment_type" property="paymentType" jdbcType="VARCHAR" />
+    <result column="is_payment" property="isPayment" jdbcType="BIT" />
+    <result column="sender_name" property="senderName" jdbcType="VARCHAR" />
+    <result column="sender_address" property="senderAddress" jdbcType="VARCHAR" />
+    <result column="sender_mobile" property="senderMobile" jdbcType="VARCHAR" />
+    <result column="sender_zip" property="senderZip" jdbcType="VARCHAR" />
+    <result column="order_state" property="orderState" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operator_number" property="operatorNumber" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="order_remark" property="orderRemark" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="recipients_name" property="recipientsName" jdbcType="VARCHAR" />
+    <result column="recipients_address" property="recipientsAddress" jdbcType="VARCHAR" />
+    <result column="recipients_zip" property="recipientsZip" jdbcType="VARCHAR" />
+    <result column="recipients_mobile" property="recipientsMobile" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    id, order_id, order_type, order_property, goods_weight, goods_volume, goods_type, 
+    order_money, pack_type, payment_type, is_payment, sender_name, sender_address, sender_mobile, 
+    sender_zip, order_state, operator, operator_number, create_time, update_time, state, 
+    order_remark, remark, recipients_name, recipients_address, recipients_zip, recipients_mobile, 
+    end_time
+  </sql>
+  <sql id="Page_Column_List" >
+    id, order_id, order_type, sender_name,goods_type ,recipients_name, create_time,order_state
+  </sql>
+ 
+  <select id="findByPage" resultMap="BaseResultMap" 
+      parameterType="com.manway.queryParam.OrderFormQueryParam">
+    select 
+    <include refid="Page_Column_List" />
+    from order_form
+    where 1= 1 
+     <if test="keyWord != null and keyWord != ''">
+      and ( order_id like "%"#{keyWord}"%" 
+        or sender_name like "%"#{keyWord}"%"
+        or recipients_name like "%"#{keyWord}"%"
+        or order_type like "%"#{keyWord}"%"
+        or goods_type like "%"#{keyWord}"%"   )    
+        
+    </if>
+    <if test="orderId != null and orderId != ''">
+        and order_id like "%"#{orderId}"%"
+    </if>
+    <if test="senderName != null and senderName != ''">
+        and sender_name like "%"#{senderName}"%"
+    </if>
+    <if test="recipientsName != null and recipientsName != ''">
+        and recipients_name like "%"#{recipientsName}"%"
+    </if>
+    <if test="orderType != null and orderType != ''">
+        and order_type like "%"#{orderType}"%"
+    </if>
+    <if test="goodsType != null and goodsType != ''">
+        and goods_type like "%"#{goodsType}"%"
+    </if>
+    <if test="startTime != null and startTime != ''">
+        and create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+        and create_time &lt;= #{endTime}
+    </if>
+    
+    order by order_id desc
+    
+  </select>
+  
+  <select id="findByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_form
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <select id="countYunOrder" resultType="java.lang.Integer" >
+    select count(*)
+    from order_form
+    where is_payment = 0 and order_state = 5
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_form
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from order_form
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.manway.entity.OrderForm" >
+    insert into order_form (id, order_id, order_type, 
+      order_property, goods_weight, goods_volume, 
+      goods_type, order_money, pack_type, 
+      payment_type, is_payment, sender_name, 
+      sender_address, sender_mobile, sender_zip, 
+      order_state, operator, operator_number, 
+      create_time, update_time, state, 
+      order_remark, remark, recipients_name, 
+      recipients_address, recipients_zip, recipients_mobile, 
+      end_time)
+    values (#{id,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
+      #{orderProperty,jdbcType=VARCHAR}, #{goodsWeight,jdbcType=DOUBLE}, #{goodsVolume,jdbcType=DOUBLE}, 
+      #{goodsType,jdbcType=VARCHAR}, #{orderMoney,jdbcType=DOUBLE}, #{packType,jdbcType=VARCHAR}, 
+      #{paymentType,jdbcType=VARCHAR}, #{isPayment,jdbcType=BIT}, #{senderName,jdbcType=VARCHAR}, 
+      #{senderAddress,jdbcType=VARCHAR}, #{senderMobile,jdbcType=VARCHAR}, #{senderZip,jdbcType=VARCHAR}, 
+      #{orderState,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{operatorNumber,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
+      #{orderRemark,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{recipientsName,jdbcType=VARCHAR}, 
+      #{recipientsAddress,jdbcType=VARCHAR}, #{recipientsZip,jdbcType=VARCHAR}, #{recipientsMobile,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.manway.entity.OrderForm" >
+    insert into order_form
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="orderProperty != null" >
+        order_property,
+      </if>
+      <if test="goodsWeight != null" >
+        goods_weight,
+      </if>
+      <if test="goodsVolume != null" >
+        goods_volume,
+      </if>
+      <if test="goodsType != null" >
+        goods_type,
+      </if>
+      <if test="orderMoney != null" >
+        order_money,
+      </if>
+      <if test="packType != null" >
+        pack_type,
+      </if>
+      <if test="paymentType != null" >
+        payment_type,
+      </if>
+      <if test="isPayment != null" >
+        is_payment,
+      </if>
+      <if test="senderName != null" >
+        sender_name,
+      </if>
+      <if test="senderAddress != null" >
+        sender_address,
+      </if>
+      <if test="senderMobile != null" >
+        sender_mobile,
+      </if>
+      <if test="senderZip != null" >
+        sender_zip,
+      </if>
+      <if test="orderState != null" >
+        order_state,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operatorNumber != null" >
+        operator_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="orderRemark != null" >
+        order_remark,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="recipientsName != null" >
+        recipients_name,
+      </if>
+      <if test="recipientsAddress != null" >
+        recipients_address,
+      </if>
+      <if test="recipientsZip != null" >
+        recipients_zip,
+      </if>
+      <if test="recipientsMobile != null" >
+        recipients_mobile,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderProperty != null" >
+        #{orderProperty,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsWeight != null" >
+        #{goodsWeight,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsVolume != null" >
+        #{goodsVolume,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsType != null" >
+        #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderMoney != null" >
+        #{orderMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="packType != null" >
+        #{packType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="isPayment != null" >
+        #{isPayment,jdbcType=BIT},
+      </if>
+      <if test="senderName != null" >
+        #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="senderAddress != null" >
+        #{senderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="senderMobile != null" >
+        #{senderMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="senderZip != null" >
+        #{senderZip,jdbcType=VARCHAR},
+      </if>
+      <if test="orderState != null" >
+        #{orderState,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNumber != null" >
+        #{operatorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=BIT},
+      </if>
+      <if test="orderRemark != null" >
+        #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsName != null" >
+        #{recipientsName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsAddress != null" >
+        #{recipientsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsZip != null" >
+        #{recipientsZip,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsMobile != null" >
+        #{recipientsMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.manway.entity.OrderForm" >
+    update order_form
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderProperty != null" >
+        order_property = #{orderProperty,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsWeight != null" >
+        goods_weight = #{goodsWeight,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsVolume != null" >
+        goods_volume = #{goodsVolume,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsType != null" >
+        goods_type = #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderMoney != null" >
+        order_money = #{orderMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="packType != null" >
+        pack_type = #{packType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        payment_type = #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="isPayment != null" >
+        is_payment = #{isPayment,jdbcType=BIT},
+      </if>
+      <if test="senderName != null" >
+        sender_name = #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="senderAddress != null" >
+        sender_address = #{senderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="senderMobile != null" >
+        sender_mobile = #{senderMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="senderZip != null" >
+        sender_zip = #{senderZip,jdbcType=VARCHAR},
+      </if>
+      <if test="orderState != null" >
+        order_state = #{orderState,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNumber != null" >
+        operator_number = #{operatorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=BIT},
+      </if>
+      <if test="orderRemark != null" >
+        order_remark = #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsName != null" >
+        recipients_name = #{recipientsName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsAddress != null" >
+        recipients_address = #{recipientsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsZip != null" >
+        recipients_zip = #{recipientsZip,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsMobile != null" >
+        recipients_mobile = #{recipientsMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.manway.entity.OrderForm" >
+    update order_form
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      order_property = #{orderProperty,jdbcType=VARCHAR},
+      goods_weight = #{goodsWeight,jdbcType=DOUBLE},
+      goods_volume = #{goodsVolume,jdbcType=DOUBLE},
+      goods_type = #{goodsType,jdbcType=VARCHAR},
+      order_money = #{orderMoney,jdbcType=DOUBLE},
+      pack_type = #{packType,jdbcType=VARCHAR},
+      payment_type = #{paymentType,jdbcType=VARCHAR},
+      is_payment = #{isPayment,jdbcType=BIT},
+      sender_name = #{senderName,jdbcType=VARCHAR},
+      sender_address = #{senderAddress,jdbcType=VARCHAR},
+      sender_mobile = #{senderMobile,jdbcType=VARCHAR},
+      sender_zip = #{senderZip,jdbcType=VARCHAR},
+      order_state = #{orderState,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      operator_number = #{operatorNumber,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      order_remark = #{orderRemark,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      recipients_name = #{recipientsName,jdbcType=VARCHAR},
+      recipients_address = #{recipientsAddress,jdbcType=VARCHAR},
+      recipients_zip = #{recipientsZip,jdbcType=VARCHAR},
+      recipients_mobile = #{recipientsMobile,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

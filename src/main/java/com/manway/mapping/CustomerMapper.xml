@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manway.dao.CustomerMapper" >
+  <resultMap id="BaseResultMap" type="com.manway.entity.Customer" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="fox" property="fox" jdbcType="VARCHAR" />
+    <result column="manager" property="manager" jdbcType="VARCHAR" />
+    <result column="manager_mobile" property="managerMobile" jdbcType="VARCHAR" />
+    <result column="rated" property="rated" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, address, tel, fox, manager, manager_mobile, rated
+  </sql>
+  
+  <select id="findByPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from customer
+    where 1=1
+     <if test="keyWord != null and keyWord != ''">
+       and (
+       		name like "%"#{keyWord}"%"
+       		or manager like "%"#{keyWord}"%"
+       		or manager_mobile like "%"#{keyWord}"%"
+        	or tel like "%"#{keyWord}"%"
+       		or fox like "%"#{keyWord}"%"
+       )
+    </if>
+    <if test="name != null and name != ''">
+       and name like "%"#{name}"%"
+    </if>
+    <if test="manager != null and manager != ''">
+        and manager like "%"#{manager}"%"
+    </if>
+    <if test="managerMobile != null and managerMobile != ''">
+        and manager_mobile like "%"#{managerMobile}"%"
+    </if>
+    <if test="tel != null and tel != ''">
+       and tel like "%"#{tel}"%"
+    </if>
+    <if test="fox != null and fox != ''">
+       and fox like "%"#{fox}"%"
+    </if>
+   
+  </select>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from customer
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from customer
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.manway.entity.Customer" >
+    insert into customer (id, name, address, 
+      tel, fox, manager, 
+      manager_mobile, rated)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{fox,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, 
+      #{managerMobile,jdbcType=VARCHAR}, #{rated,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.manway.entity.Customer" >
+    insert into customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="fox != null" >
+        fox,
+      </if>
+      <if test="manager != null" >
+        manager,
+      </if>
+      <if test="managerMobile != null" >
+        manager_mobile,
+      </if>
+      <if test="rated != null" >
+        rated,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="fox != null" >
+        #{fox,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null" >
+        #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="managerMobile != null" >
+        #{managerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="rated != null" >
+        #{rated,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.manway.entity.Customer" >
+    update customer
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="fox != null" >
+        fox = #{fox,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null" >
+        manager = #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="managerMobile != null" >
+        manager_mobile = #{managerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="rated != null" >
+        rated = #{rated,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.manway.entity.Customer" >
+    update customer
+    set name = #{name,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      fox = #{fox,jdbcType=VARCHAR},
+      manager = #{manager,jdbcType=VARCHAR},
+      manager_mobile = #{managerMobile,jdbcType=VARCHAR},
+      rated = #{rated,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

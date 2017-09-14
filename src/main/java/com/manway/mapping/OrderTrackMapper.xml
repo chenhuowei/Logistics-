@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manway.dao.OrderTrackMapper" >
+  <resultMap id="BaseResultMap" type="com.manway.entity.OrderTrack" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operator_number" property="operatorNumber" jdbcType="VARCHAR" />
+    <result column="operator_mobile" property="operatorMobile" jdbcType="VARCHAR" />
+    <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
+    <result column="operator_id" property="operatorId" jdbcType="VARCHAR" />
+    <result column="operate_time" property="operateTime" jdbcType="VARCHAR" />
+    <result column="order_update_time" property="orderUpdateTime" jdbcType="VARCHAR" />
+    <result column="order_in_time" property="orderInTime" jdbcType="VARCHAR" />
+    <result column="order_out_time" property="orderOutTime" jdbcType="VARCHAR" />
+    <result column="truck_id" property="truckId" jdbcType="VARCHAR" />
+    <result column="truck_plate_number" property="truckPlateNumber" jdbcType="VARCHAR" />
+    <result column="driver_mobile" property="driverMobile" jdbcType="VARCHAR" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="order_form_id" property="orderFormId" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="store_id" property="storeId" jdbcType="VARCHAR" />
+    <result column="track_state" property="trackState" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, location, destination, operator, operator_number, operator_mobile, operator_type, 
+    operator_id, operate_time, order_update_time, order_in_time, order_out_time, truck_id, 
+    truck_plate_number, driver_mobile, driver_name, order_form_id, remark, store_name, 
+    store_id, track_state
+  </sql>
+  
+  <sql id="Page_Column_List" >
+    id, location, destination, operator, operator_type, 
+    order_update_time, truck_id,driver_name,operator_number,
+    driver_name, order_form_id,  track_state
+  </sql>
+  
+  
+  <select id="findByPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Page_Column_List" />
+    from order_track
+    where 1=1
+    <if test="orderFormId != null and orderFormId != ''">
+        and order_form_id = #{orderFormId}
+    </if>
+    order by order_update_time desc
+  </select>
+
+  
+  <select id="findByOrderFormId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_track
+    where 1=1
+    <if test="orderFormId != null and orderFormId != ''">
+        and order_form_id = #{orderFormId}
+    </if>
+    order by order_update_time desc
+  </select>
+
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_track
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from order_track
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.manway.entity.OrderTrack" >
+    insert into order_track (id, location, destination, 
+      operator, operator_number, operator_mobile, 
+      operator_type, operator_id, operate_time, 
+      order_update_time, order_in_time, order_out_time, 
+      truck_id, truck_plate_number, driver_mobile, 
+      driver_name, order_form_id, remark, 
+      store_name, store_id, track_state
+      )
+    values (#{id,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{destination,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{operatorNumber,jdbcType=VARCHAR}, #{operatorMobile,jdbcType=VARCHAR}, 
+      #{operatorType,jdbcType=VARCHAR}, #{operatorId,jdbcType=VARCHAR}, #{operateTime,jdbcType=VARCHAR}, 
+      #{orderUpdateTime,jdbcType=VARCHAR}, #{orderInTime,jdbcType=VARCHAR}, #{orderOutTime,jdbcType=VARCHAR}, 
+      #{truckId,jdbcType=VARCHAR}, #{truckPlateNumber,jdbcType=VARCHAR}, #{driverMobile,jdbcType=VARCHAR}, 
+      #{driverName,jdbcType=VARCHAR}, #{orderFormId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{storeName,jdbcType=VARCHAR}, #{storeId,jdbcType=VARCHAR}, #{trackState,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.manway.entity.OrderTrack" >
+    insert into order_track
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="location != null" >
+        location,
+      </if>
+      <if test="destination != null" >
+        destination,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operatorNumber != null" >
+        operator_number,
+      </if>
+      <if test="operatorMobile != null" >
+        operator_mobile,
+      </if>
+      <if test="operatorType != null" >
+        operator_type,
+      </if>
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+      <if test="operateTime != null" >
+        operate_time,
+      </if>
+      <if test="orderUpdateTime != null" >
+        order_update_time,
+      </if>
+      <if test="orderInTime != null" >
+        order_in_time,
+      </if>
+      <if test="orderOutTime != null" >
+        order_out_time,
+      </if>
+      <if test="truckId != null" >
+        truck_id,
+      </if>
+      <if test="truckPlateNumber != null" >
+        truck_plate_number,
+      </if>
+      <if test="driverMobile != null" >
+        driver_mobile,
+      </if>
+      <if test="driverName != null" >
+        driver_name,
+      </if>
+      <if test="orderFormId != null" >
+        order_form_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="storeName != null" >
+        store_name,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="trackState != null" >
+        track_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="destination != null" >
+        #{destination,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNumber != null" >
+        #{operatorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorMobile != null" >
+        #{operatorMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorType != null" >
+        #{operatorType,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null" >
+        #{operateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderUpdateTime != null" >
+        #{orderUpdateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderInTime != null" >
+        #{orderInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOutTime != null" >
+        #{orderOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="truckId != null" >
+        #{truckId,jdbcType=VARCHAR},
+      </if>
+      <if test="truckPlateNumber != null" >
+        #{truckPlateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="driverMobile != null" >
+        #{driverMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="driverName != null" >
+        #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFormId != null" >
+        #{orderFormId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null" >
+        #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="trackState != null" >
+        #{trackState,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.manway.entity.OrderTrack" >
+    update order_track
+    <set >
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="destination != null" >
+        destination = #{destination,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNumber != null" >
+        operator_number = #{operatorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorMobile != null" >
+        operator_mobile = #{operatorMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorType != null" >
+        operator_type = #{operatorType,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null" >
+        operate_time = #{operateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderUpdateTime != null" >
+        order_update_time = #{orderUpdateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderInTime != null" >
+        order_in_time = #{orderInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderOutTime != null" >
+        order_out_time = #{orderOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="truckId != null" >
+        truck_id = #{truckId,jdbcType=VARCHAR},
+      </if>
+      <if test="truckPlateNumber != null" >
+        truck_plate_number = #{truckPlateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="driverMobile != null" >
+        driver_mobile = #{driverMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="driverName != null" >
+        driver_name = #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFormId != null" >
+        order_form_id = #{orderFormId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null" >
+        store_name = #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="trackState != null" >
+        track_state = #{trackState,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.manway.entity.OrderTrack" >
+    update order_track
+    set location = #{location,jdbcType=VARCHAR},
+      destination = #{destination,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      operator_number = #{operatorNumber,jdbcType=VARCHAR},
+      operator_mobile = #{operatorMobile,jdbcType=VARCHAR},
+      operator_type = #{operatorType,jdbcType=VARCHAR},
+      operator_id = #{operatorId,jdbcType=VARCHAR},
+      operate_time = #{operateTime,jdbcType=VARCHAR},
+      order_update_time = #{orderUpdateTime,jdbcType=VARCHAR},
+      order_in_time = #{orderInTime,jdbcType=VARCHAR},
+      order_out_time = #{orderOutTime,jdbcType=VARCHAR},
+      truck_id = #{truckId,jdbcType=VARCHAR},
+      truck_plate_number = #{truckPlateNumber,jdbcType=VARCHAR},
+      driver_mobile = #{driverMobile,jdbcType=VARCHAR},
+      driver_name = #{driverName,jdbcType=VARCHAR},
+      order_form_id = #{orderFormId,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      store_name = #{storeName,jdbcType=VARCHAR},
+      store_id = #{storeId,jdbcType=VARCHAR},
+      track_state = #{trackState,jdbcType=BIT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

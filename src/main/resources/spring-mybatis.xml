@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+		 <!-- 定义受环境影响易变的变量 -->  
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />  
+        <property name="ignoreResourceNotFound" value="true" />  
+        <property name="locations">  
+            <list>  
+	 <!-- 引入属性文件 -->  
+                <!-- 标准配置 -->  
+                <value>classpath*:/database.properties</value>  
+            </list>  
+        </property>  
+    </bean>  
+	
+	<!-- 配置数据源 -->
+	 <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">  
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value=""/>
+        <property name="initialSize" value="10"></property>  
+        <property name="maxActive" value="20"></property>  
+        <property name="minIdle" value="5"></property>  
+    </bean>    
+
+	  <!-- myBatis文件 -->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource" />  
+        <property name="mapperLocations" value="classpath:com/manway/mapping/*Mapper.xml" />  
+        <property name="plugins">
+		    <array>
+		      <bean class="com.github.pagehelper.PageHelper">
+		        <property name="properties">
+		          <value>
+		            dialect=mysql
+		          </value>
+		        </property>
+		      </bean>
+		    </array>
+		 </property>
+    </bean>  
+  
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+        <property name="basePackage" value="com.manway.dao" />  
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />  
+    </bean>  
+  
+    <!-- 配置事务管理器 -->  
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>  
+  
+    <!-- 注解方式配置事物 -->  
+    <!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->  
+  
+    <!-- 拦截器方式配置事物 -->  
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">  
+        <tx:attributes>  
+            <tx:method name="add*" propagation="REQUIRED" />  
+            <tx:method name="modify*" propagation="REQUIRED" />  
+            <tx:method name="delete*" propagation="REQUIRED" />  
+            <tx:method name="save*" propagation="REQUIRED" />  
+            <tx:method name="update*" propagation="REQUIRED" />  
+            <tx:method name="remove*" propagation="REQUIRED" />  
+            <tx:method name="find*" propagation="SUPPORTS" />  
+            <tx:method name="get*" propagation="SUPPORTS" />  
+            <tx:method name="query" propagation="SUPPORTS" />  
+            <tx:method name="search*" propagation="SUPPORTS" />  
+            <tx:method name="*" propagation="SUPPORTS" />  
+        </tx:attributes>  
+    </tx:advice>  
+    <aop:config>  
+        <aop:pointcut id="transactionPointcut" expression="execution(* com.manway.*.service.impl.*.*(..))" />  
+        <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />  
+    </aop:config>  
+    
+	 
+	 
+	 
+	 
+
+</beans>
